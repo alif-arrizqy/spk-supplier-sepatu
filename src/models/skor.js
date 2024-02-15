@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Skor.belongsTo(models.Alternatif, { foreignKey: 'kode_alternatif', as: 'alternatif' });
+      Skor.belongsTo(models.alternatif, { foreignKey: 'kode_alternatif', as: 'alternatif' });
     }
   }
   Skor.init(
