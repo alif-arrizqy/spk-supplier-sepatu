@@ -15,7 +15,9 @@ module.exports = {
           model: 'alternatif',
           key: 'kode_alternatif'
         },
-        allowNull: false
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       kode: {
         type: Sequelize.STRING(20)
@@ -25,11 +27,13 @@ module.exports = {
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },
