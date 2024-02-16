@@ -13,13 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
     static async getAll(user_id) {
-      return await NilaiTarget.findAll({
-        where: { user_id },
-        order: [['id', 'ASC']],
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-      })
-        .then(result => result)
-        .catch(err => err);
+      return await NilaiTarget
+        .findOne({
+          where: { user_id },
+          order: [['id', 'ASC']],
+          attributes: { exclude: ['createdAt', 'updatedAt'] },
+        })
     }
   }
   NilaiTarget.init(
@@ -33,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: 'nilai_target',
+      tableName: 'nilai_target'
     }
   );
   return NilaiTarget;
