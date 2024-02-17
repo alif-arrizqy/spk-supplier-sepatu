@@ -13,12 +13,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
     static async getAll(user_id) {
-      // return await NilaiTarget
-      //   .findOne({
-      //     where: { user_id },
-      //     order: [['id', 'ASC']],
-      //     attributes: { exclude: ['createdAt', 'updatedAt'] },
-      //   })
       return await NilaiTarget.findAll({
         where: { user_id },
         order: [['id', 'ASC']],
