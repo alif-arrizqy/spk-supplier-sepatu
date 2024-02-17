@@ -59,9 +59,7 @@
 <div class="card shadow mb-4">
   <div class="card-header py-3">
     <h4 class="float-left">Ranking Supplier</h4>
-    <%if(totalCriterias == 1) {%>
-    <a href="/hitung/hitung" class="float-right btn btn-sm btn-primary"><i class="fas fa-calculator"></i> Hitung</a>
-    <%} else {%>
+    
     <p class="float-right">Data Criteria Kurang dari 100</p>
     <%}%>
   </div>
@@ -81,7 +79,7 @@
     Rumus
   </button>
 </p> -->
-<% } %> <% const toastSuccess=messages.success %> <% const toastError=messages.error %>
+<% const toastSuccess=messages.success %> <% const toastError=messages.error %>
 <script>
   $(document).ready(function () {
     const toastSuccess = '<%= toastSuccess %>';

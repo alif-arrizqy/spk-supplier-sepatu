@@ -13,6 +13,7 @@ const dashboardRouter = require('./src/routes/dashboard');
 const hitungRouter = require('./src/routes/hitung');
 // new
 const alternatifRouter = require('./src/routes/alternatif');
+const nilaiTarget = require('./src/routes/nilaitarget');
 const env = process.env.NODE_ENV || 'development';
 const PORT = process.env[`${env.toUpperCase()}_PORT`] || 8888;
 const app = express();
@@ -42,6 +43,7 @@ app.use('/criteria', middleware, criterialRouter);
 app.use('/dashboard', middleware, dashboardRouter);
 app.use('/hitung', middleware, hitungRouter);
 app.use('/alternatif', middleware, alternatifRouter);
+app.use('/nilaitarget', middleware, nilaiTarget);
 
 app.use('*', middleware, (req, res) => res.redirect('/dashboard'));
 

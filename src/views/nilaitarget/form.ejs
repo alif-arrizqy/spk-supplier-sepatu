@@ -1,0 +1,36 @@
+<form id="form" action="<%= action%>" method="POST">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" class="form-control" placeholder="Name" value="<%= value.name%>" required />
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group">
+        <label>Kode</label>
+        <input type="text" name="kode" class="form-control" placeholder="Kode Nilai Target" value="<%= value.kode%>" required />
+      </div>
+    </div>    
+    <div class="col-md-12">
+      <div class="form-group">
+        <label>Value</label>
+        <input type="number" step="1" min="1" max="5" name="bobot" class="form-control" placeholder="Value"
+        value="<%= value.value%>" required />
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="form-group">
+        <label>Category</label>
+        <select name="category" class="form-control" required>
+          <option value="">-- Pilih Kategori --</option>
+          <option value="core_factor" <%= value.category == 'core_factor' ? 'selected' : ''%>>Core Factor</option>
+          <option value="secondary_factor" <%= value.category == 'secondary_factor' ? 'selected' : ''%>>Secondary Factor</option>
+        </select>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <button type="submit" class="btn btn-primary col-md-12">Simpan Data</button>
+    </div>
+  </div>
+</form>
