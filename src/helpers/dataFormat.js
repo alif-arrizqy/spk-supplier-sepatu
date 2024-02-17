@@ -3,12 +3,12 @@ const dataFormat = datas => {
   datas.forEach(data => {
     let tempData;
     data.forEach(temp => {
-      const name = temp.criteria.name;
+      const nameNilaiTarget = temp.nilai_target.name;
       tempData = {
         ...tempData,
-        id: temp.supplier_id,
-        supplier: temp.supplier.name,
-        [name]: temp.value,
+        id: temp.alternatif.id,
+        name: temp.alternatif.name,
+        [nameNilaiTarget]: temp.value,
       };
     });
     result.push(tempData);
