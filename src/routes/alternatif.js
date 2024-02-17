@@ -1,19 +1,24 @@
 const express = require('express');
 const router = express.Router();
-const { alternatif, nilaitarget } = require('../models');
-const NilaiTarget = require('../models/nilaitarget');
+const { nilai_target, skor, alternatif } = require('../models');
+const group = require('../helpers/group');
+const dataFormat = require('../helpers/dataFormat');
+const jsonToTable = require('../helpers/jsonToTable');
+
 
 router.get('/', async (req, res, next) => {
-    const username = req.session.username;
-    const user_id = req.session.userId;
-    const nilaitargets = await nilaitarget.getAll(user_id);
-    console.log(user_id, username, nilaitargets);
-    return res.render('alternatif/index', { title: 'Data Alternatif', username, nilaitargets });
-});
+  const username = req.session.username;
+  const user_id = req.session.userId;
+  const targets = await nilai_target.getAll(user_id);
+  return res.render('alternatif/index', { title: 'Alternatif', username, targets });
+})
 
 router.get('/table', async (req, res, next) => {
-    const user_id = req.session.userId;
-    return res.status(200).json(await alternatif.getAll({ user_id }));
-});
+  const user_id = req.session.userId;
+  const dataSkor = await skor.getAll({ user_id });
+  const tempData = group(dataSkor, 'kode_alternatif');
+  const data = dataFormat(tempData);
+  return res.status(200).json(jsonToTable(data))
+})
 
 module.exports = router;
