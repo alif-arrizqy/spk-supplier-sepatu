@@ -18,7 +18,8 @@ module.exports = (sequelize, DataTypes) => {
     kode_alternatif: DataTypes.STRING,
     name: DataTypes.STRING,
     address: DataTypes.STRING,
-    contact: DataTypes.STRING
+    contact: DataTypes.STRING,
+    nilai_prefensi: DataTypes.FLOAT
   }, {
     sequelize,
     modelName: 'alternatif',
