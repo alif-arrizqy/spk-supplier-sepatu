@@ -6,8 +6,6 @@ const flash = require('express-flash');
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const middleware = require('./src/helpers/middleware');
-const supplierRouter = require('./src/routes/supplier');
-const criterialRouter = require('./src/routes/criteria');
 const loginRouter = require('./src/routes/login');
 const dashboardRouter = require('./src/routes/dashboard');
 const hitungRouter = require('./src/routes/hitung');
@@ -38,8 +36,6 @@ app.set('view engine', 'ejs');
 app.set('layout', './layouts/index');
 
 app.use('/login', loginRouter);
-app.use('/supplier', middleware, supplierRouter);
-app.use('/criteria', middleware, criterialRouter);
 app.use('/dashboard', middleware, dashboardRouter);
 app.use('/hitung', middleware, hitungRouter);
 app.use('/alternatif', middleware, alternatifRouter);

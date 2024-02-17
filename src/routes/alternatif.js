@@ -10,7 +10,7 @@ router.get('/', async (req, res, next) => {
   const username = req.session.username;
   const user_id = req.session.userId;
   const targets = await nilai_target.getAll(user_id);
-  return res.render('alternatif/index', { title: 'Alternatif', username, targets });
+  return res.render('alternatif/index', { title: 'Supplier', username, targets });
 })
 
 router.get('/table', async (req, res, next) => {
