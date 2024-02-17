@@ -23,7 +23,9 @@ module.exports = {
         type: Sequelize.STRING(255)
       },
       kode: {
-        type: Sequelize.STRING(20)
+        type: Sequelize.STRING(20),
+        unique: true,
+        allowNull: false
       },
       value: {
         type: Sequelize.INTEGER

@@ -33,6 +33,9 @@ module.exports = {
       contact: {
         type: Sequelize.STRING(20)
       },
+      nilai_prefensi: {
+        type: Sequelize.FLOAT
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

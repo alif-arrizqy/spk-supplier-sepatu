@@ -9,6 +9,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'users',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      },
       kode_alternatif: {
         type: Sequelize.STRING(20),
         references: {
@@ -19,8 +29,12 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      kode: {
-        type: Sequelize.STRING(20)
+      kode_nilai_target: {
+        type: Sequelize.STRING(20),
+        references: {
+          model: 'nilai_target',
+          key: 'kode'
+        },
       },
       value: {
         type: Sequelize.INTEGER
