@@ -1,0 +1,54 @@
+<form id="form" action="<%= action%>" method="POST">
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h4>Data Alternatif</h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Kode Alternatif</label>
+            <input type="text" name="kode_alternatif" class="form-control" placeholder="Kode Alternatif" required value="<%= kode_alternatif %>" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Nama Toko</label>
+            <input type="text" name="name" class="form-control" placeholder="Nama Toko Supplier" required value="<%= name %>" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group
+          ">
+            <label>Alamat</label>
+            <input type="text" name="address" class="form-control" placeholder="Alamat" required value="<%= address %>" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group
+          ">
+            <label>Kontak</label>
+            <input type="text" name="contact" class="form-control" placeholder="No Hp / Telp Supplier" required value="<%= contact %>" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card shadow mb-4">
+      <div class="card-header py-3">
+        <h4>Data Nilai Target</h4>
+      </div>
+      <% dataForm.forEach( (form, i)=> { const value = form.value || "" %>
+      <div class="col-md-12">
+        <div class="form-group">
+          <label>
+            <%= form.name %>
+          </label>
+          <input type="number" step="1" min="1" max="5" name="<%= form.kode %>" class="form-control"
+            placeholder="<%= form.name %>" value="" required />
+        </div>
+      </div>
+      <% }) %>
+      <div class="col-md-12">
+        <button type="submit" class="btn btn-primary col-md-12">Simpan Data</button>
+    </div>
+</form>
