@@ -107,10 +107,26 @@ router.post('/:kode', async (req, res) => {
   return res.redirect('/alternatif');
 });
 
-router.get('/delete/:id', async (req, res, next) => {
-  const id = req.params.id;
-  const tempAlternatif = await alternatif.findByPk(id);
-  await tempAlternatif.destroy();
+router.get('/delete/:kode', async (req, res, next) => {
+  const kode = req.params;
+  const user_id = req.session.userId;
+  console.log(kode);
+  const tempAlternatif = await alternatif.findOne({
+    where: { kode_alternatif: kode.kode, user_id },
+  });
+  if (tempAlternatif) {
+    // find all skor with kode_alternatif and user_id
+    const findSkor = await skor.findAll({
+      where: { kode_alternatif: kode.kode, user_id },
+    });
+    if (findSkor) {
+      // delete all skor with kode_alternatif and user_id
+      findSkor.forEach(async skor => {
+        await skor.destroy();
+      });
+    }
+    await tempAlternatif.destroy();
+  }
   req.flash('success', 'Data Berhasil Dihapus');
   return res.redirect('/alternatif');
 });
