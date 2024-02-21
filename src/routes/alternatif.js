@@ -66,38 +66,43 @@ router.post('/', async (req, res, next) => {
   return res.redirect('/alternatif');
 });
 
-router.post('/:id', async (req, res) => {
-  const { id } = req.params;
+router.post('/:kode', async (req, res) => {
+  const { kode } = req.params;
   const user_id = req.session.userId;
   const data = req.body;
-  const tempAlternatif = await alternatif.findOne({
-    where: { id, user_id },
+  const findAlternatif = await alternatif.findOne({
+    where: { kode_alternatif: kode, user_id },
   });
-  if (tempAlternatif) {
+  if (findAlternatif) {
     // update table alternatif
-    tempAlternatif.update({
+    findAlternatif.update({
       kode_alternatif: data.kode_alternatif,
       name: data.name,
       address: data.address,
       contact: data.contact,
     });
   }
+
+  // get kode from nilai_target table
+  const getKode = await nilai_target.getAll(user_id);
+  const kode_nilai_target = getKode.map(e => e.kode);
+  // check if kode_nilai_target is same with data
+  const tempSkor = {};
   for (const value of Object.keys(data)) {
-    if (value != 'kode_alternatif') {
-      // update table skor
-      await skor.update(
-        {
-          user_id,
-          kode_alternatif: data.kode_alternatif,
-          kode_nilai_target: value,
-          value: data[value],
-        },
-        {
-          where: { user_id, kode_alternatif, kode_nilai_target },
-        }
-      );
+    if (kode_nilai_target.includes(value)) {
+      // create new object with key is kode_nilai_target
+      // and value is data from kode_nilai_target
+      tempSkor[value] = data[value];
     }
   }
+
+  // update table skor
+  for (const value of Object.keys(tempSkor)) {
+    await skor.update({ value: data[value] }, {
+      where: { kode_nilai_target: value, kode_alternatif: kode, user_id },
+    });
+  }
+
   req.flash('success', 'Data Berhasil Diubah');
   return res.redirect('/alternatif');
 });
@@ -113,40 +118,43 @@ router.get('/delete/:id', async (req, res, next) => {
 router.get('/form', async (req, res, next) => {
   const user_id = req.session.userId;
   const dataForm = await nilai_target.getAll(user_id);
-  return res.render('alternatif/form', { 
+  // empty value for form
+  dataForm.forEach(data => {
+    data.value = '';
+  });
+  return res.render('alternatif/form', {
     action: '/alternatif',
     title: 'Supplier',
     dataForm,
-    kode_alternatif: '',
-    name: '',
-    address: '',
-    contact: '',
+    formKodeAlternatif: '',
+    formName: '',
+    formAddress: '',
+    formContact: '',
   });
 });
 
-router.get('/form/:id', async (req, res, next) => {
-  const { id } = req.params;
+router.get('/form/:kode', async (req, res, next) => {
+  const kode = req.params.kode;
   const user_id = req.session.userId;
-  const targets = await nilai_target.getAll(user_id);
-  // ini salah
-  const tempForms = await skor.getAll({ user_id, kode_alternatif: id });
-  const kode_alternatif = tempForms[0]['alternatif']['kode_alternatif'];
-  const name = tempForms[0]['alternatif']['name'];
-  const address = tempForms[0]['alternatif']['address'];
-  const contact = tempForms[0]['alternatif']['contact'];
-  const dataForm = targets.map(target => {
-    const dataNilaiTarget = target.dataValues;
-    const find = tempForms.find(form => form.kode_nilai_target === target.kode_nilai_target);
-    return { ...dataNilaiTarget, value: find ? find.value : '' };
+
+  const tempForms = await skor.getAll({ user_id, kode_alternatif: kode});
+  const formKodeAlternatif = tempForms[0]['alternatif']['dataValues']['kode_alternatif'];
+  const formName = tempForms[0]['alternatif']['dataValues']['name'];
+  const formAddress = tempForms[0]['alternatif']['dataValues']['address'];
+  const formContact = tempForms[0]['alternatif']['dataValues']['contact'];
+
+  const dataForm = tempForms.map(temp => {
+    const dataNilaiTarget = temp['nilai_target']['dataValues'];
+    return { ...dataNilaiTarget, value: temp['dataValues']['value'] };
   });
   return res.render('alternatif/form', {
-    action: `/alternatif/${id}`,
+    action: `/alternatif/${kode}`,
     title: 'Supplier',
     dataForm,
-    kode_alternatif,
-    name,
-    address,
-    contact,
+    formKodeAlternatif,
+    formName,
+    formAddress,
+    formContact,
   });
 });
 
