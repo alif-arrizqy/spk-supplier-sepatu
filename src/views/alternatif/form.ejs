@@ -8,27 +8,27 @@
         <div class="col-md-12">
           <div class="form-group">
             <label>Kode Alternatif</label>
-            <input type="text" name="kode_alternatif" class="form-control" placeholder="Kode Alternatif" required value="<%= kode_alternatif %>" />
+            <input type="text" name="kode_alternatif" class="form-control" placeholder="Kode Alternatif" required value="<%= formKodeAlternatif %>" />
           </div>
         </div>
         <div class="col-md-12">
           <div class="form-group">
             <label>Nama Toko</label>
-            <input type="text" name="name" class="form-control" placeholder="Nama Toko Supplier" required value="<%= name %>" />
+            <input type="text" name="name" class="form-control" placeholder="Nama Toko Supplier" required value="<%= formName %>" />
           </div>
         </div>
         <div class="col-md-12">
           <div class="form-group
           ">
             <label>Alamat</label>
-            <input type="text" name="address" class="form-control" placeholder="Alamat" required value="<%= address %>" />
+            <input type="text" name="address" class="form-control" placeholder="Alamat" required value="<%= formAddress %>" />
           </div>
         </div>
         <div class="col-md-12">
           <div class="form-group
           ">
             <label>Kontak</label>
-            <input type="text" name="contact" class="form-control" placeholder="No Hp / Telp Supplier" required value="<%= contact %>" />
+            <input type="text" name="contact" class="form-control" placeholder="No Hp / Telp Supplier" required value="<%= formContact %>" />
           </div>
         </div>
       </div>
@@ -37,14 +37,14 @@
       <div class="card-header py-3">
         <h4>Data Nilai Target</h4>
       </div>
-      <% dataForm.forEach( (form, i)=> { const value = form.value || "" %>
+      <% dataForm.forEach( (form, i)=> { %>
       <div class="col-md-12">
         <div class="form-group">
           <label>
             <%= form.name %>
           </label>
           <input type="number" step="1" min="1" max="5" name="<%= form.kode %>" class="form-control"
-            placeholder="<%= form.name %>" value="" required />
+            placeholder="<%= form.name %>" value="<%= form.value %>" required />
         </div>
       </div>
       <% }) %>
