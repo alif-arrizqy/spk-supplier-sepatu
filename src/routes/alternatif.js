@@ -110,7 +110,7 @@ router.post('/:kode', async (req, res) => {
 router.get('/delete/:kode', async (req, res, next) => {
   const kode = req.params;
   const user_id = req.session.userId;
-  console.log(kode);
+  
   const tempAlternatif = await alternatif.findOne({
     where: { kode_alternatif: kode.kode, user_id },
   });
