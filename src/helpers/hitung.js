@@ -1,72 +1,51 @@
-const hitung = ({ datas, criterias, db = false }) => {
-  const sumPow = (arr, param, criteria) => {
-    const matrix = arr.map(val => val[param]);
-    const sum = +matrix.reduce((acc, val) => acc + Math.pow(val, 2), 0).toFixed(3);
-    const perhitungan1 = matrix.map(val => +(val / sum).toFixed(3));
-    const ternormalisasi = arr.map(val => +((val[param] / sum) * criteria).toFixed(3));
-    return {
-      matrixString: matrix.join('^2+'),
-      matrix,
-      sum,
-      perhitungan1,
-      ternormalisasi,
-    };
-  };
+const bobotNilaiGap = require('./bobotNilaiGap');
 
-  const sum = arr => arr.reduce((acc, val) => +(acc + val).toFixed(5));
-  const data = datas.map(data => {
-    const array = Object.values(data);
-    return array.slice(2, array.length);
-  });
-  const matrix1 = data.map(matrix => {
-    return matrix.join('&');
-  });
-  const matrixD = criterias.map(criteria => {
-    return sumPow(datas, criteria.name, criteria.bobot);
-  });
-  const lengthI = matrixD[0].ternormalisasi.length;
-  const lengthJ = matrixD.length;
-  const newMatrixTernormalisasi = new Array(lengthI).fill(0).map(() => new Array(lengthJ).fill(0));
-  const newMatrixPerhitungan1 = new Array(lengthI).fill(0).map(() => new Array(lengthJ).fill(0));
-  matrixD.forEach((el, i) => {
-    //ubah array urutan array
-    el.ternormalisasi.forEach((element, j) => {
-      newMatrixTernormalisasi[j][i] = element;
-    });
-    el.perhitungan1.forEach((element, j) => {
-      newMatrixPerhitungan1[j][i] = element;
-    });
-  });
-  const matrix2 = newMatrixPerhitungan1.map(matrix => {
-    return matrix.join('&');
-  });
-  const matrix3 = newMatrixTernormalisasi.map(matrix => {
-    return matrix.join('&');
-  });
+// Helper function to calculate average
+const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
 
-  const hasil = (coreSecondary = newMatrixTernormalisasi.map((val, i) => {
-    const valLength = val.length;
-    const subLength = Math.ceil(valLength / 2);
-    const sliceLength = val.slice(subLength, valLength).length;
-    const location = datas[i];
-    const core = (sum(val.slice(0, subLength)) / subLength).toFixed(3);
-    const secondary = (sum(val.slice(subLength, valLength)) / sliceLength).toFixed(3);
-    const hasil = +((70 * core) / 100 + (30 * secondary) / 100).toFixed(4);
-    return {
-      id: location.id,
-      core,
-      secondary,
-      hasil,
-      location: location.supplier,
-      kualitas: location.Kualitas,
-    };
-  }));
-  return {
-    matrix1: matrix1.join('\\\\'),
-    matrix2: matrix2.join('\\\\'),
-    matrix3: matrix3.join('\\\\'),
-    perhitungan: matrixD,
-    hasil,
-  };
+// Helper function to calculate preference value
+const calculatePreference = (NCF, NSF) => parseFloat((NSF / (NCF + NSF)).toFixed(3));
+
+// Helper function to rank preference values
+const rankPreferences = preferences => {
+  const sortedPreferences = [...preferences].sort((a, b) => b - a);
+  return preferences
+    .map((preference, i) => ({
+      kode_alternatif: `A${i + 1}`,
+      rank: sortedPreferences.indexOf(preference) + 1,
+      value: preference,
+    }))
+    .sort((a, b) => a.rank - b.rank);
 };
-module.exports = hitung;
+
+// Main function
+const calculateRankings = (nilaiTarget, skorDataAlternatif, bobotNilaiGap) => {
+  const gapProfile = skorDataAlternatif.map(({ skor }) => skor.map(({ value }, i) => value - nilaiTarget[i].value));
+
+  const gapKriteria = gapProfile.map(gap =>
+    gap.map(value => bobotNilaiGap[1].bobot[bobotNilaiGap[0].selisihGap.indexOf(value)])
+  );
+
+  const { core_factor, secondary_factor } = nilaiTarget.reduce(
+    (acc, { kode, category }) => {
+      acc[category].push(Number(kode.slice(1)) - 1);
+      return acc;
+    },
+    { core_factor: [], secondary_factor: [] }
+  );
+
+  const rearranged = gapKriteria.map(row => [...core_factor, ...secondary_factor].map(i => row[i]));
+
+  const coreSecondaryGroup = rearranged.map(row => {
+    const core = row.slice(0, core_factor.length);
+    const secondary = row.slice(core_factor.length);
+    return { NCF: average(core), NSF: average(secondary) };
+  });
+
+  const preferences = coreSecondaryGroup.map(({ NCF, NSF }) => calculatePreference(NCF, NSF));
+
+  return rankPreferences(preferences);
+};
+
+// console.log(calculateRankings(nilaiTarget, skorDataAlternatif, bobotNilaiGap));
+module.exports = calculateRankings;
