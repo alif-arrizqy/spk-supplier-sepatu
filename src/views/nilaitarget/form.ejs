@@ -1,36 +1,45 @@
 <form id="form" action="<%= action%>" method="POST">
-  <div class="row">
-    <div class="col-md-12">
-      <div class="form-group">
-        <label>Name</label>
-        <input type="text" name="name" class="form-control" placeholder="Name" value="<%= value.name%>" required />
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h4>Nilai Target</h4>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Nama Kategori</label>
+            <input type="text" name="name" class="form-control" placeholder="Nama Kategori" required value="<%= formName %>" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Kode</label>
+            <input type="text" name="kode" class="form-control" placeholder="Kode Nilai Target" required
+              value="<%= formKode %>" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Value</label>
+            <input type="number" step="1" min="1" max="5" name="value" class="form-control" placeholder="Value 1 -5" required
+              value="<%= formValue %>" />
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-group">
+            <label>Category</label>
+            <select name="category" class="form-control" required>
+              <option value="">-- Pilih Kategori --</option>
+              <option value="core_factor" <%=formCategory=='core_factor' ? 'selected' : '' %>>Core Factor</option>
+              <option value="secondary_factor" <%=formCategory=='secondary_factor' ? 'selected' : '' %>>Secondary Factor
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="col-md-12">
-      <div class="form-group">
-        <label>Kode</label>
-        <input type="text" name="kode" class="form-control" placeholder="Kode Nilai Target" value="<%= value.kode%>" required />
+      <div class="col-md-12 mb-3">
+        <button type="submit" class="btn btn-primary col-md-12">Simpan Data</button>
       </div>
-    </div>    
-    <div class="col-md-12">
-      <div class="form-group">
-        <label>Value</label>
-        <input type="number" step="1" min="1" max="5" name="bobot" class="form-control" placeholder="Value"
-        value="<%= value.value%>" required />
-      </div>
-    </div>
-    <div class="col-md-12">
-      <div class="form-group">
-        <label>Category</label>
-        <select name="category" class="form-control" required>
-          <option value="">-- Pilih Kategori --</option>
-          <option value="core_factor" <%= value.category == 'core_factor' ? 'selected' : ''%>>Core Factor</option>
-          <option value="secondary_factor" <%= value.category == 'secondary_factor' ? 'selected' : ''%>>Secondary Factor</option>
-        </select>
-      </div>
-    </div>
-    <div class="col-md-12">
-      <button type="submit" class="btn btn-primary col-md-12">Simpan Data</button>
-    </div>
   </div>
 </form>
