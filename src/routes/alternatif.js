@@ -23,43 +23,45 @@ router.get('/table', async (req, res, next) => {
 router.post('/', async (req, res, next) => {
   const data = req.body;
   const user_id = req.session.userId;
-  // validation kode_nilai_target, must be integer and min 1 and max 5
-  for (const value of Object.keys(data)) {
-    console.log(`value: ${value}`);
-    console.log(`datavalue: ${data[value]}`);
 
-    
+  // get kode from nilai_target table
+  const getKode = await nilai_target.getAll(user_id);
+  const kode_nilai_target = getKode.map(e => e.kode);
+  // check if kode_nilai_target is same with data
+  const tempSkor = {};
+  for (const value of Object.keys(data)) {
+    if (kode_nilai_target.includes(value)) {
+      // create new object with key is kode_nilai_target
+      // and value is data from kode_nilai_target
+      tempSkor[value] = data[value];
+    }
   }
 
-  // const tempAlternatif = await alternatif.findOne({
-  //   where: {
-  //     user_id,
-  //     kode_alternatif: data.kode_alternatif,
-  //   },
-  // });
-  // if (tempAlternatif) {
-  //   req.flash('error', 'Kode Alternatif Tidak Boleh Sama');
-  //   return res.redirect('/alternatif');
-  // }
-  // // create data supplier or alternatif
-  // const alternatifData = await alternatif.create({
-  //   user_id,
-  //   kode_alternatif: data.kode_alternatif,
-  //   name: data.name,
-  //   address: data.address,
-  //   contact: data.contact,
-  // });
-  // for (const value of Object.keys(data)) {
-  //   if (value != 'kode_alternatif') {
-  //     // create data skor
-  //     await skor.create({
-  //       user_id,
-  //       kode_alternatif: data.kode_alternatif,
-  //       kode_nilai_target: value,
-  //       value: data[value],
-  //     });
-  //   }
-  // }
+  const findALternatif = await alternatif.findOne({
+    where: { kode_alternatif: data.kode_alternatif, user_id },
+  });
+  if (findALternatif) {
+    req.flash('error', 'Kode Alternatif Tidak Boleh Sama');
+    return res.redirect('/alternatif');
+  }
+  // create data supplier or alternatif
+  await alternatif.create({
+    user_id,
+    kode_alternatif: data.kode_alternatif,
+    name: data.name,
+    address: data.address,
+    contact: data.contact,
+  });
+
+  // create data skor
+  for (const value of Object.keys(tempSkor)) {
+    await skor.create({
+      user_id,
+      kode_alternatif: data.kode_alternatif,
+      kode_nilai_target: value,
+      value: tempSkor[value],
+    });
+  }
   req.flash('success', 'Data Berhasil Ditambahkan');
   return res.redirect('/alternatif');
 });
