@@ -6,13 +6,8 @@ const { nilai_target, skor, alternatif } = require('../models');
 
 router.get('/', async (req, res, next) => {
   const user_id = req.session.userId;
-  const username = req.session.username;
   const dataSkor = await skor.getAll({ user_id });
   const nilaiTarget = await nilai_target.getAll(user_id);
-  const findFirstRank = await alternatif.findAll({
-    where: { user_id },
-    order: [['nilai_prefensi', 'DESC']],
-  });
   const alternatifs = await alternatif.findAll({
     where: { user_id },
     order: [['nilai_prefensi', 'DESC']],
@@ -20,10 +15,9 @@ router.get('/', async (req, res, next) => {
   });
 
   // reformating data nilai target and skor
-  if (nilaiTarget.length === 0 || dataSkor.length === 0 || alternatifs.length === 0) {
+  if (nilaiTarget.length === 1 || dataSkor.length === 1 || alternatifs.length === 1) {
     return res.render('dashboard', {
       title: 'Dashboard',
-      username,
       firstRank: '',
       totalSupplier: 0,
       resultHitung: [],
@@ -56,13 +50,12 @@ router.get('/', async (req, res, next) => {
 
   // get first rank
   const firstRank =
-    resultHitung.length != 0 && findFirstRank[0].nilai_prefensi ? findFirstRank[0].name : resultHitung[0].name;
+    resultHitung.length != 0 && alternatifs.length != 0 ? resultHitung[0].name : '';
 
   res.render('dashboard', {
     title: 'Dashboard',
-    username,
     firstRank,
-    totalSupplier: findFirstRank.length,
+    totalSupplier: alternatifs.length,
     resultHitung,
   });
 });
@@ -78,10 +71,9 @@ router.get('/table', async (req, res, next) => {
   const dataSkor = await skor.getAll({ user_id });
 
   // reformating data nilai target and skor
-  if (nilaiTarget.length === 0 || dataSkor.length === 0 || alternatifs.length === 0) {
+  if (nilaiTarget.length === 1 || dataSkor.length === 1 || alternatifs.length === 1) {
     return res.render('dashboard', {
       title: 'Dashboard',
-      username,
       firstRank: '',
       totalSupplier: 0,
       resultHitung: [],
@@ -117,7 +109,7 @@ router.get('/table', async (req, res, next) => {
       name: alternatif.name,
       address: alternatif.address,
       contact: alternatif.contact,
-      score: e.value || alternatif.nilai_prefensi,
+      score: alternatif.nilai_prefensi || e.value,
     };
   });
   return res.status(200).json(jsonToTable(result));
