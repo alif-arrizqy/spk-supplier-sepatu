@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const dataFormat = require('../helpers/dataFormat');
-const group = require('../helpers/group');
 const jsonToTable = require('../helpers/jsonToTable');
 const hitung = require('../helpers/hitung');
 const { nilai_target, skor, alternatif } = require('../models');
@@ -78,7 +76,6 @@ router.get('/table', async (req, res, next) => {
   });
   const nilaiTarget = await nilai_target.getAll(user_id);
   const dataSkor = await skor.getAll({ user_id });
-  const tempData = group(dataSkor, 'kode_alternatif');
 
   // reformating data nilai target and skor
   if (nilaiTarget.length === 0 || dataSkor.length === 0 || alternatifs.length === 0) {
