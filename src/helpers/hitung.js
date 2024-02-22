@@ -7,12 +7,12 @@ const average = arr => arr.reduce((a, b) => a + b, 0) / arr.length;
 const calculatePreference = (NCF, NSF) => parseFloat((NSF / (NCF + NSF)).toFixed(3));
 
 // Helper function to rank preference values
-const rankPreferences = (preferences, names) => {
+const rankPreferences = (preferences, datasAlternatif) => {
   const sortedPreferences = [...preferences].sort((a, b) => b - a);
   return preferences
     .map((preference, i) => ({
-      kode_alternatif: `A${i + 1}`,
-      name: names[i],
+      kode_alternatif: datasAlternatif[i].kode_alternatif,
+      name: datasAlternatif[i].name,
       rank: sortedPreferences.indexOf(preference) + 1,
       value: preference,
     }))
@@ -27,7 +27,11 @@ const calculateRankings = (nilaiTarget, skorDataAlternatif) => {
     gap.map(value => bobotNilaiGap[1].bobot[bobotNilaiGap[0].selisihGap.indexOf(value)])
   );
 
-  const names = skorDataAlternatif.map(({ name }) => name);
+  
+  const datasAlternatif = skorDataAlternatif.map( el => ({
+    kode_alternatif: el.kode_alternatif,
+    name: el.name
+  }));
 
   const { core_factor, secondary_factor } = nilaiTarget.reduce(
     (acc, { kode, category }) => {
@@ -47,7 +51,7 @@ const calculateRankings = (nilaiTarget, skorDataAlternatif) => {
 
   const preferences = coreSecondaryGroup.map(({ NCF, NSF }) => calculatePreference(NCF, NSF));
 
-  return rankPreferences(preferences, names);
+  return rankPreferences(preferences, datasAlternatif);
 };
 
 // console.log(calculateRankings(nilaiTarget, skorDataAlternatif, bobotNilaiGap));
