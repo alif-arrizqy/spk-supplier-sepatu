@@ -278,39 +278,16 @@ const dummyData = async user_id => {
       for (const j in element.skor) {
         if (Object.hasOwnProperty.call(element.skor, j)) {
           const skor = element.skor[j];
-          console.log(`element.kode_alternatif: ${element.kode_alternatif}`);
-          console.log(`kode_nilai_target: ${skor.kode}`);
-          console.log(`value: ${skor.value}`);
-          // await models.skor_alternatif.upsert({
-          //   user_id,
-          //   kode_alternatif: element.kode_alternatif,
-          //   kode_nilai_target: skor.kode,
-          //   value: skor.value,
-          // });
+          await models.skor.upsert({
+            user_id,
+            kode_alternatif: element.kode_alternatif,
+            kode_nilai_target: skor.kode,
+            value: skor.value,
+          });
         }
       }
     }
   }
-
-  // const criterias = await models.criteria.bulkCreate(dataCriteria);
-  // const locations = await models.supplier.bulkCreate(dataLocation);
-
-  // for (const i in locations) {
-  //   if (Object.hasOwnProperty.call(locations, i)) {
-  //     const location = locations[i];
-  //     for (const j in criterias) {
-  //       if (Object.hasOwnProperty.call(criterias, j)) {
-  //         const criteria = criterias[j];
-  //         await models.link.create({
-  //           user_id,
-  //           supplier_id: location.id,
-  //           criteria_id: criteria.id,
-  //           value: valueLink[i][j],
-  //         });
-  //       }
-  //     }
-  //   }
-  // }
   return { status: 'success' };
 };
 
