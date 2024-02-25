@@ -32,14 +32,16 @@ router.get('/', async (req, res, next) => {
   });
 
   const formatedSkor = alternatifs.map(e => {
-    dataSkor.find(el => el.kode_alternatif === e.kode_alternatif);
+    dataSkor.find(el => el.alternatif_id === e.id);
     return {
-      kode_alternatif: e.kode_alternatif,
+      kode_alternatif: e.id,
       name: e.name,
       arrSkor: dataSkor
-        .filter(el => el.kode_alternatif === e.kode_alternatif)
+        .filter(el => el.alternatif_id === e.id)
         .map(el => {
-          return { kode: el.kode_nilai_target, value: el.value };
+          // find kode_nilai_target from nilai_target table
+          const kodeNilaiTarget = nilaiTarget.find(nilai => nilai.id === el.nilai_target_id);
+          return { kode: kodeNilaiTarget.kode, value: el.value };
         }),
     };
   });

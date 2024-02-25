@@ -24,7 +24,6 @@ module.exports = {
       },
       kode: {
         type: Sequelize.STRING(20),
-        unique: true,
         allowNull: false
       },
       value: {

@@ -19,22 +19,25 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      kode_alternatif: {
-        type: Sequelize.STRING(20),
+      alternatif_id: {
+        type: Sequelize.INTEGER,
         references: {
           model: 'alternatif',
-          key: 'kode_alternatif'
+          key: 'id'
         },
         allowNull: false,
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       },
-      kode_nilai_target: {
-        type: Sequelize.STRING(20),
+      nilai_target_id: {
+        type: Sequelize.INTEGER,
         references: {
           model: 'nilai_target',
-          key: 'kode'
+          key: 'id'
         },
+        allowNull: false,
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
       },
       value: {
         type: Sequelize.INTEGER

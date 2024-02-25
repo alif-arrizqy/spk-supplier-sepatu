@@ -5,8 +5,8 @@ module.exports = (sequelize, DataTypes) => {
   class Skor extends Model {
     static associate(models) {
       Skor.belongsTo(models.user, { foreignKey: 'user_id', as: 'user' });
-      Skor.belongsTo(models.alternatif, { foreignKey: 'kode_alternatif', as: 'alternatif' });
-      Skor.belongsTo(models.nilai_target, { foreignKey: 'kode_nilai_target', as: 'nilai_target' });
+      Skor.belongsTo(models.alternatif, { foreignKey: 'alternatif_id', as: 'alternatif' });
+      Skor.belongsTo(models.nilai_target, { foreignKey: 'nilai_target_id', as: 'nilai_target' });
     }
 
     static async getAll(where = []) {
@@ -19,25 +19,11 @@ module.exports = (sequelize, DataTypes) => {
             model: sequelize.models.alternatif,
             as: 'alternatif',
             attributes: { exclude },
-            on: {
-              kode_alternatif: sequelize.where(
-                sequelize.col('skor.kode_alternatif'),
-                '=',
-                sequelize.col('alternatif.kode_alternatif')
-              ),
-            },
           },
           {
             model: sequelize.models.nilai_target,
             as: 'nilai_target',
             attributes: { exclude },
-            on: {
-              kode_nilai_target: sequelize.where(
-                sequelize.col('skor.kode_nilai_target'),
-                '=',
-                sequelize.col('nilai_target.kode')
-              ),
-            },
           },
         ],
         required: false,
@@ -50,8 +36,8 @@ module.exports = (sequelize, DataTypes) => {
   Skor.init(
     {
       user_id: DataTypes.INTEGER,
-      kode_alternatif: DataTypes.STRING,
-      kode_nilai_target: DataTypes.STRING,
+      alternatif_id: DataTypes.INTEGER,
+      nilai_target_id: DataTypes.INTEGER,
       value: DataTypes.INTEGER,
     },
     {
