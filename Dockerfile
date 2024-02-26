@@ -10,6 +10,9 @@ COPY package*.json ./
 # Install dependencies
 RUN npm install
 
+# Install sequelize
+RUN npm install sequelize
+
 # Install sequelize-cli
 RUN npm i -g sequelize-cli
 
