@@ -24,6 +24,7 @@ router.get('/', async (req, res, next) => {
   }
   const formattedNilaiTarget = nilaiTarget.map(target => {
     return {
+      id: target.id,
       name: target.name,
       kode: target.kode,
       value: target.value,
@@ -34,8 +35,9 @@ router.get('/', async (req, res, next) => {
   const formatedSkor = alternatifs.map(e => {
     dataSkor.find(el => el.alternatif_id === e.id);
     return {
-      kode_alternatif: e.id,
+      id: e.id,
       name: e.name,
+      kode_alternatif: e.kode_alternatif,
       arrSkor: dataSkor
         .filter(el => el.alternatif_id === e.id)
         .map(el => {
@@ -49,8 +51,7 @@ router.get('/', async (req, res, next) => {
   // call hitung function
   const resultHitung = hitung(formattedNilaiTarget, formatedSkor);
   resultHitung.map(e => {
-    console.log(`kode_alternatif: ${e.kode_alternatif}, name: ${e.name}, rank: ${e.rank}, value: ${e.value}`);
-    // alternatif.update({ nilai_prefensi: e.value }, { where: { kode_alternatif: e.kode_alternatif, user_id } });
+    alternatif.update({ nilai_prefensi: e.value }, { where: { id: e.id, user_id } });
   })
   req.flash('success', 'Perhitungan Berhasil');
   return res.redirect('/dashboard');

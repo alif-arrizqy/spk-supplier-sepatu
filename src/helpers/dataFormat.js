@@ -6,7 +6,7 @@ const dataFormat = datas => {
       const nameNilaiTarget = temp.nilai_target.name;
       tempData = {
         ...tempData,
-        id: temp.alternatif.kode_alternatif,
+        id: temp.alternatif.id,
         name: temp.alternatif.name,
         [nameNilaiTarget]: temp.value,
       };

@@ -11,7 +11,7 @@ const rankPreferences = (preferences, datasAlternatif) => {
   const sortedPreferences = [...preferences].sort((a, b) => b - a);
   return preferences
     .map((preference, i) => ({
-      kode_alternatif: datasAlternatif[i].kode_alternatif,
+      id: datasAlternatif[i].id,
       name: datasAlternatif[i].name,
       rank: sortedPreferences.indexOf(preference) + 1,
       value: preference,
@@ -29,7 +29,7 @@ const calculateRankings = (nilaiTarget, skorDataAlternatif) => {
 
   
   const datasAlternatif = skorDataAlternatif.map( el => ({
-    kode_alternatif: el.kode_alternatif,
+    id: el.id,
     name: el.name
   }));
 

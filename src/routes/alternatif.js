@@ -32,13 +32,7 @@ router.post('/', async (req, res, next) => {
   })
   // check if kode_nilai_target is same with data
   const tempSkor = {};
-  // for (const value of Object.keys(data)) {
-  //   if (kode_nilai_target.includes(value)) {
-  //     // create new object with key is kode_nilai_target
-  //     // and value is data from kode_nilai_target
-  //     tempSkor[value] = data[value];
-  //   }
-  // }
+
   for (const value of Object.keys(data)) {
     if (kode_nilai_target.some(e => e.kode === value)) {
       // create new object with key is kode_nilai_target
@@ -76,12 +70,12 @@ router.post('/', async (req, res, next) => {
   return res.redirect('/alternatif');
 });
 
-router.post('/:kode', async (req, res) => {
-  const { kode } = req.params;
+router.post('/:id', async (req, res) => {
+  const { id } = req.params;
   const user_id = req.session.userId;
   const data = req.body;
   const findAlternatif = await alternatif.findOne({
-    where: { kode_alternatif: kode, user_id },
+    where: { kode_alternatif: id, user_id },
   });
   if (findAlternatif) {
     // update table alternatif
@@ -95,21 +89,24 @@ router.post('/:kode', async (req, res) => {
 
   // get kode from nilai_target table
   const getKode = await nilai_target.getAll(user_id);
-  const kode_nilai_target = getKode.map(e => e.kode);
+  const kode_nilai_target = getKode.map(e => {
+    return { id: e.id, kode: e.kode };
+  });
   // check if kode_nilai_target is same with data
   const tempSkor = {};
+
   for (const value of Object.keys(data)) {
-    if (kode_nilai_target.includes(value)) {
+    if (kode_nilai_target.some(e => e.kode === value)) {
       // create new object with key is kode_nilai_target
       // and value is data from kode_nilai_target
-      tempSkor[value] = data[value];
+      tempSkor[kode_nilai_target.find(e => e.kode === value).id] = data[value];
     }
   }
 
   // update table skor
   for (const value of Object.keys(tempSkor)) {
-    await skor.update({ value: data[value] }, {
-      where: { nilai_target_id: value, alternatif_id: kode, user_id },
+    await skor.update({ value: tempSkor[value] }, {
+      where: { nilai_target_id: value, alternatif_id: id, user_id },
     });
   }
 
@@ -117,17 +114,17 @@ router.post('/:kode', async (req, res) => {
   return res.redirect('/alternatif');
 });
 
-router.get('/delete/:kode', async (req, res, next) => {
-  const kode = req.params;
+router.get('/delete/:id', async (req, res, next) => {
+  const id = req.params;
   const user_id = req.session.userId;
   
   const tempAlternatif = await alternatif.findOne({
-    where: { kode_alternatif: kode.kode, user_id },
+    where: { id: id.id, user_id },
   });
   if (tempAlternatif) {
     // find all skor with kode_alternatif and user_id
     const findSkor = await skor.findAll({
-      where: { alternatif_id: kode.kode, user_id },
+      where: { alternatif_id: id.id, user_id },
     });
     if (findSkor) {
       // delete all skor with kode_alternatif and user_id
@@ -136,9 +133,12 @@ router.get('/delete/:kode', async (req, res, next) => {
       });
     }
     await tempAlternatif.destroy();
+    req.flash('success', 'Data Berhasil Dihapus');
+    return res.redirect('/alternatif');
+  } else {
+    req.flash('error', 'Gagal Menghapus Data');
+    return res.redirect('/alternatif');
   }
-  req.flash('success', 'Data Berhasil Dihapus');
-  return res.redirect('/alternatif');
 });
 
 router.get('/form', async (req, res, next) => {
@@ -159,12 +159,12 @@ router.get('/form', async (req, res, next) => {
   });
 });
 
-router.get('/form/:kode', async (req, res, next) => {
-  const kode = req.params.kode;
+router.get('/form/:id', async (req, res, next) => {
+  const id = req.params.id;
   const user_id = req.session.userId;
 
-  const tempForms = await skor.getAll({ user_id, alternatif_id: kode});
-  const formKodeAlternatif = tempForms[0]['alternatif']['dataValues']['alternatif_id'];
+  const tempForms = await skor.getAll({ user_id, alternatif_id: id});
+  const formKodeAlternatif = tempForms[0]['alternatif']['dataValues']['kode_alternatif'];
   const formName = tempForms[0]['alternatif']['dataValues']['name'];
   const formAddress = tempForms[0]['alternatif']['dataValues']['address'];
   const formContact = tempForms[0]['alternatif']['dataValues']['contact'];
@@ -174,7 +174,7 @@ router.get('/form/:kode', async (req, res, next) => {
     return { ...dataNilaiTarget, value: temp['dataValues']['value'] };
   });
   return res.render('alternatif/form', {
-    action: `/alternatif/${kode}`,
+    action: `/alternatif/${id}`,
     title: 'Supplier',
     dataForm,
     formKodeAlternatif,

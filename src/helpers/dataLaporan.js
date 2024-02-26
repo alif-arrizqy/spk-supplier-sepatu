@@ -153,116 +153,16 @@ const dummyData = async user_id => {
   ];
 
   const skorDataAlternatif = [
-    {
-      kode_alternatif: 'A1',
-      skor: [
-        { kode: 'K1', value: 4 },
-        { kode: 'K2', value: 5 },
-        { kode: 'K3', value: 4 },
-        { kode: 'K4', value: 5 },
-        { kode: 'K5', value: 3 },
-        { kode: 'K6', value: 4 },
-      ],
-    },
-    {
-      kode_alternatif: 'A2',
-      skor: [
-        { kode: 'K1', value: 3 },
-        { kode: 'K2', value: 4 },
-        { kode: 'K3', value: 3 },
-        { kode: 'K4', value: 4 },
-        { kode: 'K5', value: 4 },
-        { kode: 'K6', value: 3 },
-      ],
-    },
-    {
-      kode_alternatif: 'A3',
-      skor: [
-        { kode: 'K1', value: 5 },
-        { kode: 'K2', value: 3 },
-        { kode: 'K3', value: 5 },
-        { kode: 'K4', value: 3 },
-        { kode: 'K5', value: 5 },
-        { kode: 'K6', value: 5 },
-      ],
-    },
-    {
-      kode_alternatif: 'A4',
-      skor: [
-        { kode: 'K1', value: 4 },
-        { kode: 'K2', value: 4 },
-        { kode: 'K3', value: 3 },
-        { kode: 'K4', value: 4 },
-        { kode: 'K5', value: 3 },
-        { kode: 'K6', value: 4 },
-      ],
-    },
-    {
-      kode_alternatif: 'A5',
-      skor: [
-        { kode: 'K1', value: 3 },
-        { kode: 'K2', value: 5 },
-        { kode: 'K3', value: 4 },
-        { kode: 'K4', value: 5 },
-        { kode: 'K5', value: 4 },
-        { kode: 'K6', value: 3 },
-      ],
-    },
-    {
-      kode_alternatif: 'A6',
-      skor: [
-        { kode: 'K1', value: 4 },
-        { kode: 'K2', value: 3 },
-        { kode: 'K3', value: 3 },
-        { kode: 'K4', value: 3 },
-        { kode: 'K5', value: 5 },
-        { kode: 'K6', value: 5 },
-      ],
-    },
-    {
-      kode_alternatif: 'A7',
-      skor: [
-        { kode: 'K1', value: 3 },
-        { kode: 'K2', value: 4 },
-        { kode: 'K3', value: 4 },
-        { kode: 'K4', value: 4 },
-        { kode: 'K5', value: 4 },
-        { kode: 'K6', value: 4 },
-      ],
-    },
-    {
-      kode_alternatif: 'A8',
-      skor: [
-        { kode: 'K1', value: 5 },
-        { kode: 'K2', value: 5 },
-        { kode: 'K3', value: 3 },
-        { kode: 'K4', value: 5 },
-        { kode: 'K5', value: 3 },
-        { kode: 'K6', value: 3 },
-      ],
-    },
-    {
-      kode_alternatif: 'A9',
-      skor: [
-        { kode: 'K1', value: 4 },
-        { kode: 'K2', value: 4 },
-        { kode: 'K3', value: 4 },
-        { kode: 'K4', value: 4 },
-        { kode: 'K5', value: 4 },
-        { kode: 'K6', value: 4 },
-      ],
-    },
-    {
-      kode_alternatif: 'A10',
-      skor: [
-        { kode: 'K1', value: 3 },
-        { kode: 'K2', value: 3 },
-        { kode: 'K3', value: 5 },
-        { kode: 'K4', value: 3 },
-        { kode: 'K5', value: 5 },
-        { kode: 'K6', value: 3 },
-      ],
-    },
+    [4,5,4,5,3,5],
+    [3,4,3,4,4,3],
+    [5,3,5,3,5,5],
+    [4,4,3,4,3,4],
+    [3,5,4,5,4,3],
+    [4,3,3,3,5,5],
+    [3,4,4,4,4,4],
+    [5,5,3,5,3,3],
+    [4,4,4,4,4,4],
+    [3,3,5,3,5,3],
   ];
 
   // bulk create nilai_target
@@ -271,18 +171,17 @@ const dummyData = async user_id => {
   // bulk create alternatif
   const alternatif = await models.alternatif.bulkCreate(dataAlternatif);
 
-  // upsert skor
-  for (const i in skorDataAlternatif) {
-    if (Object.hasOwnProperty.call(skorDataAlternatif, i)) {
-      const element = skorDataAlternatif[i];
-      for (const j in element.skor) {
-        if (Object.hasOwnProperty.call(element.skor, j)) {
-          const skor = element.skor[j];
-          await models.skor.upsert({
+  for (const i in alternatif) {
+    if (Object.hasOwnProperty.call(alternatif, i)) {
+      const elAlternatif = alternatif[i];
+      for (const j in target) {
+        if (Object.hasOwnProperty.call(target, j)) {
+          const skor = target[j];
+          await models.skor.create({
             user_id,
-            kode_alternatif: element.kode_alternatif,
-            kode_nilai_target: skor.kode,
-            value: skor.value,
+            alternatif_id: elAlternatif.id,
+            nilai_target_id: skor.id,
+            value: skorDataAlternatif[i][j],
           });
         }
       }

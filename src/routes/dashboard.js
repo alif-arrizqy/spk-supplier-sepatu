@@ -85,6 +85,7 @@ router.get('/table', async (req, res, next) => {
   }
   const formattedNilaiTarget = nilaiTarget.map(target => {
     return {
+      id: target.id,
       name: target.name,
       kode: target.kode,
       value: target.value,
@@ -93,12 +94,11 @@ router.get('/table', async (req, res, next) => {
   });
 
   const formatedSkor = alternatifs.map(e => {
-    console.log(e.id);
-    console.log(e.name);
     dataSkor.find(el => el.alternatif_id === e.id);
     return {
       id: e.id,
       name: e.name,
+      kode_alternatif: e.kode_alternatif,
       arrSkor: dataSkor
         .filter(el => el.alternatif_id === e.id)
         .map(el => {
@@ -117,7 +117,7 @@ router.get('/table', async (req, res, next) => {
       name: alternatif.name,
       address: alternatif.address,
       contact: alternatif.contact,
-      score: alternatif.nilai_prefensi || e.value,
+      score: e.value || alternatif.nilai_prefensi,
     };
   });
   return res.status(200).json(jsonToTable(result));
