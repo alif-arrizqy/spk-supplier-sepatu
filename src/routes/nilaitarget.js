@@ -25,11 +25,11 @@ router.post('/', async (req, res, next) => {
   const user_id = req.session.userId;
   const findNilaiTarget = await nilai_target.findOne({ where: { kode: data.kode, user_id } });
   if (findNilaiTarget) {
-    req.flash('error', 'Kode Nilai Target Tidak Boleh Sama');
+    req.flash('error', 'Kode Kriteria Tidak Boleh Sama');
     return res.redirect('/nilaitarget');
   }
   await nilai_target.create({ user_id, name: data.name, kode: data.kode, value: data.value, category: data.category });
-  req.flash('success', 'Nilai Target Berhasil Ditambahkan');
+  req.flash('success', 'Data Kriteria Berhasil Ditambahkan');
   return res.redirect('/nilaitarget');
 });
 
@@ -40,11 +40,11 @@ router.post('/:id', async (req, res, next) => {
   const findNilaiTarget = await nilai_target.findOne({ where: { kode: data.kode, user_id } });
   if (findNilaiTarget) {
     await nilai_target.update({ name: data.name, value: data.value, category: data.category }, { where: { id, user_id } });
-    req.flash('success', 'Nilai Target Berhasil Diubah');
+    req.flash('success', 'Data Kriteria Berhasil Diubah');
     return res.redirect('/nilaitarget');
   } else {
     await nilai_target.update({ name: data.name, kode: data.kode, value: data.value, category: data.category }, { where: { id, user_id } });
-    req.flash('success', 'Nilai Target Berhasil Diubah');
+    req.flash('success', 'Data Kriteria Berhasil Diubah');
     return res.redirect('/nilaitarget');
   }
 });
@@ -57,7 +57,7 @@ router.get('/delete/:id', async (req, res, next) => {
   if (findNilaiTarget) {
     await nilai_target.destroy({ where: { id, user_id } });
   }
-  req.flash('success', 'Nilai Target Berhasil Dihapus');
+  req.flash('success', 'Data Kriteria Berhasil Dihapus');
   return res.redirect('/nilaitarget');
 });
 

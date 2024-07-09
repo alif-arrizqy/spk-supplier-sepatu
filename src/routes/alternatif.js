@@ -66,7 +66,7 @@ router.post('/', async (req, res, next) => {
       value: tempSkor[value],
     });
   }
-  req.flash('success', 'Data Berhasil Ditambahkan');
+  req.flash('success', 'Data Supplier Berhasil Ditambahkan');
   return res.redirect('/alternatif');
 });
 
@@ -110,7 +110,7 @@ router.post('/:id', async (req, res) => {
     });
   }
 
-  req.flash('success', 'Data Berhasil Diubah');
+  req.flash('success', 'Data Supplier Berhasil Diubah');
   return res.redirect('/alternatif');
 });
 
@@ -133,7 +133,7 @@ router.get('/delete/:id', async (req, res, next) => {
       });
     }
     await tempAlternatif.destroy();
-    req.flash('success', 'Data Berhasil Dihapus');
+    req.flash('success', 'Data Supplier Berhasil Dihapus');
     return res.redirect('/alternatif');
   } else {
     req.flash('error', 'Gagal Menghapus Data');
