@@ -9,8 +9,6 @@ services:
       - POSTGRES_USER=${PRODUCTION_POSTGRES_USER}
       - POSTGRES_PASSWORD=${PRODUCTION_POSTGRES_PASSWORD}
       - POSTGRES_DB=${PRODUCTION_POSTGRES_DB}
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
     ports:
       - "${PRODUCTION_DB_PORT_EXPOSE}:${PRODUCTION_DB_PORT}"
 
@@ -21,7 +19,6 @@ services:
     container_name: spk-topsis
     ports:
       - "${PRODUCTION_PORT}:${PRODUCTION_PORT}"
-    # restart: unless-stopped
     depends_on:
       - postgres
     env_file:
@@ -32,5 +29,3 @@ services:
       - DB_USER=${PRODUCTION_POSTGRES_USER}
       - DB_PASS=${PRODUCTION_POSTGRES_PASSWORD}
       - DB_NAME=${PRODUCTION_POSTGRES_DB}
-    volumes:
-      - ./src:/app/src
