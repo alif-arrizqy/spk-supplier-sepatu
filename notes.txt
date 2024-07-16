@@ -1,0 +1,7 @@
+1. buat file .env
+
+2. jalankan docker build
+docker compose up -d --build
+
+3. migrate database using command
+npx sequelize-cli db:migrate
