@@ -19,8 +19,5 @@ RUN npm i -g sequelize-cli
 # Copy the rest of the application code to the container
 COPY . .
 
-# Make file executable
-RUN chmod +x startup.sh
-
-# Start the application
-ENTRYPOINT [ "./startup.sh" ]
+# Run the app
+CMD ["npm", "run", "start"]
